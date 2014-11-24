@@ -102,7 +102,11 @@ module AjaxDatatablesRails
       model, column = column.split('.')
       model = model.singularize.titleize.gsub( / /, '' ).constantize
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST', [model.arel_table[column.to_sym].as('VARCHAR')])
-      casted_column.matches("%#{value}%")
+      if column.to_sym == :status
+        casted_column.matches("#{value}")
+      else
+        casted_column.matches("%#{value}%")
+      end
     end
 
     def aggregate_query
