@@ -101,11 +101,11 @@ module AjaxDatatablesRails
     def search_condition(column, value)
       model, column = column.split('.')
       model = model.singularize.titleize.gsub( / /, '' ).constantize
-      casted_column = ::Arel::Nodes::NamedFunction.new('CAST', [model.arel_table[column.to_sym].as('VARCHAR')])
+      model.arel_table[column.to_sym].matches("%#{value}%")
       if column.to_sym == :status
-        casted_column.matches("#{value}")
+        model.arel_table[column.to_sym].eq("#{value}")
       else
-        casted_column.matches("%#{value}%")
+        model.arel_table[column.to_sym].matches("%#{value}%")
       end
     end
 
